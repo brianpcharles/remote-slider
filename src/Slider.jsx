@@ -12,7 +12,7 @@ import 'swiper/css/scrollbar';
 import 'swiper/css/effect-fade';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import '../public/slider/styles.css';
+import './styles.css';
 
 export default function Slider({ config }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
