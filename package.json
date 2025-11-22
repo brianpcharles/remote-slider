@@ -4,14 +4,21 @@
   "description": "React Swiper remote slider for PDP galleries",
   "main": "src/Slider.jsx",
   "scripts": {
-    "build": "echo 'No build step needed; static files served from public/'",
-    "start": "echo 'Local dev server not configured here'"
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "author": "Brian Charles",
   "license": "MIT",
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "swiper": "^10.2.1"
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "swiper": "^10.3.1"
+  },
+  "devDependencies": {
+    "react-scripts": "5.0.1",
+    "vite": "^7.2.4"
   }
 }
