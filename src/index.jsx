@@ -32,8 +32,3 @@ const exampleConfig = {
 
 // Mount slider
 root.render(<Slider config={exampleConfig} />);
-
-// Optional: expose globally for remote use
-window.renderRemoteSlider = (config) => {
-  root.render(<Slider config={config} />);
-};
