@@ -4,9 +4,9 @@
   "description": "React Swiper remote slider for PDP galleries",
   "main": "src/Slider.jsx",
   "scripts": {
-    "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "preview": "vite preview"
   },
   "author": "Brian Charles",
