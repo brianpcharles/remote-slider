@@ -53,28 +53,57 @@
     <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-  <script src="./remote-slider.umd.js"></script>
+    <script src="./remote-slider.umd.js" id="remoteSliderScript"></script>
+      <script>
+        // Diagnostic: log when remote slider script loads or fails
+        (function(){
+          var s = document.getElementById('remoteSliderScript');
+          if(!s){ console.warn('[Demo] remote-slider script tag missing'); return; }
+          s.addEventListener('load', function(){
+            console.log('[Demo] remote-slider script loaded. window.RemoteSlider keys:', window.RemoteSlider && Object.keys(window.RemoteSlider));
+          });
+          s.addEventListener('error', function(e){
+            console.error('[Demo] remote-slider script failed to load', e);
+          });
+        })();
+      </script>
     <script>
       function parseConfig() {
         try { return JSON.parse(document.getElementById('configInput').value); } catch (e) { console.error('Invalid JSON', e); return null; }
       }
+        function ensureReady(fn){
+          if(window.RemoteSlider){ fn(); return; }
+          console.warn('[Demo] RemoteSlider not yet defined; will retry shortly');
+          var attempts = 0;
+          var maxAttempts = 10;
+          var timer = setInterval(function(){
+            if(window.RemoteSlider){ clearInterval(timer); fn(); }
+            else if(++attempts >= maxAttempts){
+              clearInterval(timer);
+              console.error('[Demo] RemoteSlider still undefined after retries. Check network panel for remote-slider.umd.js.');
+            }
+          }, 300);
+        }
       document.getElementById('mountBtn').addEventListener('click', () => {
         const cfg = parseConfig();
         if (!cfg) return;
-        RemoteSlider.mount('#gallery', cfg);
+          ensureReady(() => window.RemoteSlider.mount('#gallery', cfg));
       });
       document.getElementById('remountBtn').addEventListener('click', () => {
         const cfg = parseConfig();
         if (!cfg) return;
-        RemoteSlider.remount('#gallery', cfg);
+          ensureReady(() => window.RemoteSlider.remount('#gallery', cfg));
       });
       document.getElementById('unmountBtn').addEventListener('click', () => {
-        RemoteSlider.unmount('#gallery');
+          if(!window.RemoteSlider){ console.warn('[Demo] RemoteSlider not loaded'); return; }
+          window.RemoteSlider.unmount('#gallery');
       });
       document.addEventListener('DOMContentLoaded', () => {
         const cfg = parseConfig();
-        RemoteSlider.mount('#gallery', cfg);
-        console.log('RemoteSlider ready:', window.RemoteSlider);
+          ensureReady(() => {
+            window.RemoteSlider.mount('#gallery', cfg);
+            console.log('RemoteSlider ready (DOMContentLoaded):', window.RemoteSlider);
+          });
       });
     </script>
   </body>
