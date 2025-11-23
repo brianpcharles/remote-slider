@@ -1,15 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Remote Slider Test</title>
-</head>
-<body>
-  <!-- Root div for React -->
-  <div id="root"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remote Slider Demo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" />
+    <link rel="stylesheet" href="../dist/remote-slider.css" />
+    <style>
+      body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+      #gallery { border: 1px solid #ccc; padding: 8px; min-height: 300px; }
+      .config-block { margin-bottom: 1rem; }
+      textarea { width: 100%; height: 160px; font-family: monospace; }
+      button { cursor: pointer; margin-right: .5rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Remote Slider Demo</h1>
+    <p>Edit config JSON and mount the slider.</p>
+    <div class="config-block">
+      <label for="configInput"><strong>Config JSON:</strong></label>
+      <textarea id="configInput">{
+  "slidesUrl": "https://example.com/cloudinary-slides.json",
+  "resourcePath": {
+    "image": "https://res.cloudinary.com/demo/image/upload/",
+    "video": "https://res.cloudinary.com/demo/video/upload/"
+  },
+  "transformations": {
+    "image": "c_fit,w_800/",
+    "gif": "c_fit,w_800/",
+    "video": "c_fit,w_800/",
+    "thumbnail": "c_fill,w_160,h_160/"
+  },
+  "thumbnails": {
+    "breakpoint": 768,
+    "desktop": { "enabled": true, "direction": "vertical" },
+    "mobile": { "enabled": false }
+  },
+  "desktopCrop": { "width": "800px", "height": "600px" },
+  "mobileCrop": { "width": "100%", "height": "400px" },
+  "imageProps": { "objectFit": "cover", "lazyLoad": true },
+  "videoProps": { "autoplay": true, "muted": true, "loop": true, "playsInline": true }
+}</textarea>
+      <div>
+        <button id="mountBtn">Mount</button>
+        <button id="remountBtn">Remount</button>
+        <button id="unmountBtn">Unmount</button>
+      </div>
+    </div>
+    <div id="gallery"></div>
 
-  <!-- Your React entry point -->
-  <script type="module" src="/src/index.jsx"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="../dist/remote-slider.umd.js"></script>
+    <script>
+      function parseConfig() {
+        try { return JSON.parse(document.getElementById('configInput').value); } catch (e) { console.error('Invalid JSON', e); return null; }
+      }
+      document.getElementById('mountBtn').addEventListener('click', () => {
+        const cfg = parseConfig();
+        if (!cfg) return;
+        RemoteSlider.mount('#gallery', cfg);
+      });
+      document.getElementById('remountBtn').addEventListener('click', () => {
+        const cfg = parseConfig();
+        if (!cfg) return;
+        RemoteSlider.remount('#gallery', cfg);
+      });
+      document.getElementById('unmountBtn').addEventListener('click', () => {
+        RemoteSlider.unmount('#gallery');
+      });
+      document.addEventListener('DOMContentLoaded', () => {
+        const cfg = parseConfig();
+        RemoteSlider.mount('#gallery', cfg);
+        console.log('RemoteSlider ready:', window.RemoteSlider);
+      });
+    </script>
+  </body>
 </html>
